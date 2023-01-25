@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UIKit
 //import ExerciseData
 
 struct ContentView: View {
@@ -19,24 +20,83 @@ struct ContentView: View {
         ]
     var body: some View {
         NavigationView {
-            List(muscleGroups, id: \.self) { muscleGroup in
-                NavigationLink(destination: ExerciseView(exercises: self.exercises[muscleGroup] ?? [])) {
-                    Text(muscleGroup)
+            VStack {
+                HStack {
+                    Text("Muscle Groups")
+                        .font(.title)
+                    Spacer()
+                    NavigationLink(destination: PersonalRoutinesView()) {
+                        Image(systemName: "rectangle.portrait.and.arrow.forward")
+                    }
+
+
                 }
+                List(muscleGroups, id: \.self) { muscleGroup in
+                    NavigationLink(destination: ExerciseView(exercises: self.exercises[muscleGroup] ?? [])) {
+                        Text(muscleGroup)
+                    }
+                }
+                .navigationBarTitle("Target Work")
             }
-            .navigationBarTitle("Muscle Groups")
+            .padding()
         }
-        .padding()
     }
 }
 
 struct PersonalRoutinesView: View {
+    @State private var showForm = false
+    @State private var name = ""
+    @State private var selectedExercises: Set<String> = []
+    let exercises = [
+            "Chest": ["Barbell Bench Press", "Dumbbell Fly", "Push-ups"],
+            "Back": ["Deadlift", "Bent-over Row", "Pull-ups"],
+            "Shoulders": ["Barbell Shoulder Press", "Dumbbell Lateral Raise", "Dumbbell Front Raise"],
+            "Arms": ["Barbell Curl", "Tricep Dips", "Hammer Curl"],
+            "Legs": ["Squat", "Deadlift", "Lunges"]
+        ]
+    var routines: [String: Routine] = [:]
     var body: some View {
         VStack {
-            // your code to create and display personal routines here
+            // code to display existing routines here
+            Spacer()
+            Button(action: {
+                self.showForm.toggle()
+            }) {
+                Image(systemName: "plus")
+            }
+        }
+        .sheet(isPresented: $showForm) {
+            Form {
+                TextField("Routine Name", text: $name)
+                ForEach(exercises.keys.sorted(), id: \.self) { muscleGroup in
+                    Section(header: Text(muscleGroup)) {
+                        ForEach(self.exercises[muscleGroup]!, id: \.self) { exercise in
+                            Checkbox(isOn: self.$selectedExercises.contains(exercise)) {
+                                Text(exercise)
+                            }
+                        }
+                    }
+                }
+                Button(action: {
+                    self.addRoutine()
+                }) {
+                    Text("Add Routine")
+                }
+            }
         }
     }
+    func addRoutine() {
+        let newRoutine = Routine(name: name, exercises: Array(selectedExercises))
+        routines[name] = newRoutine
+        self.showForm = false
+    }
 }
+
+struct Routine {
+    var name: String
+    var exercises: Set<String>
+}
+
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
