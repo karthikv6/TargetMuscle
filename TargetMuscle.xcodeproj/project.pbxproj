@@ -14,6 +14,7 @@
 		3DDD0FFD2981C619004233DE /* TargetMuscleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDD0FFC2981C619004233DE /* TargetMuscleTests.swift */; };
 		3DDD10072981C619004233DE /* TargetMuscleUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDD10062981C619004233DE /* TargetMuscleUITests.swift */; };
 		3DDD10092981C619004233DE /* TargetMuscleUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDD10082981C619004233DE /* TargetMuscleUITestsLaunchTests.swift */; };
+		3DDD10182981D4DF004233DE /* ExerciseData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDD10172981D4DF004233DE /* ExerciseData.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,6 +46,7 @@
 		3DDD10022981C619004233DE /* TargetMuscleUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TargetMuscleUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3DDD10062981C619004233DE /* TargetMuscleUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TargetMuscleUITests.swift; sourceTree = "<group>"; };
 		3DDD10082981C619004233DE /* TargetMuscleUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TargetMuscleUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		3DDD10172981D4DF004233DE /* ExerciseData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseData.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,6 +81,7 @@
 				3DDD0FFB2981C619004233DE /* TargetMuscleTests */,
 				3DDD10052981C619004233DE /* TargetMuscleUITests */,
 				3DDD0FE82981C618004233DE /* Products */,
+				3DDD10192981D5EC004233DE /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -97,6 +100,7 @@
 			children = (
 				3DDD0FEA2981C618004233DE /* TargetMuscleApp.swift */,
 				3DDD0FEC2981C618004233DE /* ContentView.swift */,
+				3DDD10172981D4DF004233DE /* ExerciseData.swift */,
 				3DDD0FEE2981C619004233DE /* Assets.xcassets */,
 				3DDD0FF02981C619004233DE /* TargetMuscle.entitlements */,
 				3DDD0FF12981C619004233DE /* Preview Content */,
@@ -127,6 +131,13 @@
 				3DDD10082981C619004233DE /* TargetMuscleUITestsLaunchTests.swift */,
 			);
 			path = TargetMuscleUITests;
+			sourceTree = "<group>";
+		};
+		3DDD10192981D5EC004233DE /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -261,6 +272,7 @@
 			files = (
 				3DDD0FED2981C618004233DE /* ContentView.swift in Sources */,
 				3DDD0FEB2981C618004233DE /* TargetMuscleApp.swift in Sources */,
+				3DDD10182981D4DF004233DE /* ExerciseData.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
