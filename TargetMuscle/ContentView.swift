@@ -25,9 +25,9 @@ struct ContentView: View {
                     Text("Muscle Groups")
                         .font(.title)
                     Spacer()
-                    NavigationLink(destination: PersonalRoutinesView()) {
-                        Image(systemName: "rectangle.portrait.and.arrow.forward")
-                    }
+//                    NavigationLink(destination: PersonalRoutinesView()) {
+//                        Image(systemName: "rectangle.portrait.and.arrow.forward")
+//                    }
 
 
                 }
@@ -43,54 +43,7 @@ struct ContentView: View {
     }
 }
 
-struct PersonalRoutinesView: View {
-    @State private var showForm = false
-    @State private var name = ""
-    @State private var selectedExercises: Set<String> = []
-    let exercises = [
-            "Chest": ["Barbell Bench Press", "Dumbbell Fly", "Push-ups"],
-            "Back": ["Deadlift", "Bent-over Row", "Pull-ups"],
-            "Shoulders": ["Barbell Shoulder Press", "Dumbbell Lateral Raise", "Dumbbell Front Raise"],
-            "Arms": ["Barbell Curl", "Tricep Dips", "Hammer Curl"],
-            "Legs": ["Squat", "Deadlift", "Lunges"]
-        ]
-    var routines: [String: Routine] = [:]
-    var body: some View {
-        VStack {
-            // code to display existing routines here
-            Spacer()
-            Button(action: {
-                self.showForm.toggle()
-            }) {
-                Image(systemName: "plus")
-            }
-        }
-        .sheet(isPresented: $showForm) {
-            Form {
-                TextField("Routine Name", text: $name)
-                ForEach(exercises.keys.sorted(), id: \.self) { muscleGroup in
-                    Section(header: Text(muscleGroup)) {
-                        ForEach(self.exercises[muscleGroup]!, id: \.self) { exercise in
-                            Checkbox(isOn: self.$selectedExercises.contains(exercise)) {
-                                Text(exercise)
-                            }
-                        }
-                    }
-                }
-                Button(action: {
-                    self.addRoutine()
-                }) {
-                    Text("Add Routine")
-                }
-            }
-        }
-    }
-    func addRoutine() {
-        let newRoutine = Routine(name: name, exercises: Array(selectedExercises))
-        routines[name] = newRoutine
-        self.showForm = false
-    }
-}
+
 
 struct Routine {
     var name: String
