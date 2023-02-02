@@ -7,6 +7,7 @@
 
 import SwiftUI
 import UIKit
+import Combine
 //import ExerciseData
 
 struct ContentView: View {
@@ -25,9 +26,9 @@ struct ContentView: View {
                     Text("Muscle Groups")
                         .font(.title)
                     Spacer()
-//                    NavigationLink(destination: PersonalRoutinesView()) {
-//                        Image(systemName: "rectangle.portrait.and.arrow.forward")
-//                    }
+                    NavigationLink(destination: PersonalRoutinesView()) {
+                        Image(systemName: "rectangle.portrait.and.arrow.forward")
+                    }
 
 
                 }
@@ -45,10 +46,7 @@ struct ContentView: View {
 
 
 
-struct Routine {
-    var name: String
-    var exercises: Set<String>
-}
+
 
 
 struct ContentView_Previews: PreviewProvider {
@@ -56,6 +54,92 @@ struct ContentView_Previews: PreviewProvider {
         ContentView()
     }
 }
+
+struct PersonalRoutinesView: View {
+  @State private var isFormPresented = false
+
+  var body: some View {
+    VStack {
+      if routines.isEmpty {
+        Text("Welcome to Personal Routines!")
+      } else {
+        List {
+          ForEach(Array(routines.keys), id: \.self) { key in
+            Text(key)
+          }
+        }
+      }
+      Spacer()
+      Button(action: {
+        self.isFormPresented = true
+      }) {
+        Text("Open Form")
+      }
+    }.sheet(isPresented: $isFormPresented) {
+      FormView()
+    }
+  }
+}
+
+
+struct FormView: View {
+  @State private var selectedMovements = Set<String>()
+  @State private var routineName = "New Routine"
+
+  let exercises = [
+    "Chest": ["Barbell Bench Press", "Dumbbell Fly", "Push-ups"],
+    "Back": ["Deadlift", "Bent-over Row", "Pull-ups"],
+    "Shoulders": ["Barbell Shoulder Press", "Dumbbell Lateral Raise", "Dumbbell Front Raise"],
+    "Arms": ["Barbell Curl", "Tricep Dips", "Hammer Curl"],
+    "Legs": ["Squat", "Deadlift", "Lunges"]
+  ]
+
+  var body: some View {
+    NavigationView {
+      Form {
+        TextField("Routine Name", text: $routineName)
+        ForEach(exercises.keys.sorted(), id: \.self) { key in
+          Section(header: Text(key)) {
+            ForEach(self.exercises[key]!, id: \.self) { exercise in
+              MultipleSelectionRow(title: exercise, isSelected: self.selectedMovements.contains(exercise)) {
+                if self.selectedMovements.contains(exercise) {
+                  self.selectedMovements.remove(exercise)
+                } else {
+                  self.selectedMovements.insert(exercise)
+                }
+              }
+            }
+          }
+        }
+      }
+      .navigationBarTitle("", displayMode: .inline)
+      .navigationBarItems(trailing: Button(action: saveRoutine) {
+        Text("Save")
+      })
+      .onReceive(Just(routineName)) { newValue in
+        if newValue.isEmpty {
+          self.routineName = "New Routine"
+        }
+      }
+    }
+  }
+
+  func saveRoutine() {
+    let newRoutine = Routine(name: routineName, movements: Array(selectedMovements))
+    routines[routineName] = newRoutine
+    //You can add the implementation to save the routine to the dictionary 'routines' here.
+  }
+}
+
+struct Routine {
+  let name: String
+  let movements: [String]
+}
+
+var routines = [String: Routine]()
+
+
+
 
 var exerciseDescriptions = [
     "Barbell Bench Press": "Lie down on a flat bench with a barbell. Grab the barbell with a medium-width grip. Plant your feet firmly on the ground. Unrack the barbell by straightening your arms. Lower the barbell to your chest. Push the barbell back to the starting position.",
@@ -125,6 +209,25 @@ struct ExerciseDescriptionView: View {
         }
     }
 }
+
+struct MultipleSelectionRow: View {
+  let title: String
+  let isSelected: Bool
+  let action: () -> Void
+
+  var body: some View {
+    Button(action: action) {
+      HStack {
+        Text(title)
+        if isSelected {
+          Spacer()
+          Image(systemName: "checkmark")
+        }
+      }
+    }
+  }
+}
+
 
 
 //struct ExerciseView: View {
