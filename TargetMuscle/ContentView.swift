@@ -7,6 +7,7 @@
 
 import SwiftUI
 import UIKit
+import Combine
 //import ExerciseData
 
 struct ContentView: View {
@@ -59,7 +60,16 @@ struct PersonalRoutinesView: View {
 
   var body: some View {
     VStack {
-      Text("Welcome to Personal Routines!")
+      if routines.isEmpty {
+        Text("Welcome to Personal Routines!")
+      } else {
+        List {
+          ForEach(Array(routines.keys), id: \.self) { key in
+            Text(key)
+          }
+        }
+      }
+      Spacer()
       Button(action: {
         self.isFormPresented = true
       }) {
@@ -71,9 +81,10 @@ struct PersonalRoutinesView: View {
   }
 }
 
+
 struct FormView: View {
   @State private var selectedMovements = Set<String>()
-  @State private var routineName = ""
+  @State private var routineName = "New Routine"
 
   let exercises = [
     "Chest": ["Barbell Bench Press", "Dumbbell Fly", "Push-ups"],
@@ -86,6 +97,7 @@ struct FormView: View {
   var body: some View {
     NavigationView {
       Form {
+        TextField("Routine Name", text: $routineName)
         ForEach(exercises.keys.sorted(), id: \.self) { key in
           Section(header: Text(key)) {
             ForEach(self.exercises[key]!, id: \.self) { exercise in
@@ -99,11 +111,16 @@ struct FormView: View {
             }
           }
         }
-        TextField("Routine Name", text: $routineName)
-        Button(action: saveRoutine) {
-          Text("Save Routine")
+      }
+      .navigationBarTitle("", displayMode: .inline)
+      .navigationBarItems(trailing: Button(action: saveRoutine) {
+        Text("Save")
+      })
+      .onReceive(Just(routineName)) { newValue in
+        if newValue.isEmpty {
+          self.routineName = "New Routine"
         }
-      }.navigationBarTitle("Add Routine")
+      }
     }
   }
 
