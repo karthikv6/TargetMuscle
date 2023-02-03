@@ -27,7 +27,8 @@ struct ContentView: View {
                         .font(.title)
                     Spacer()
                     NavigationLink(destination: PersonalRoutinesView()) {
-                        Image(systemName: "rectangle.portrait.and.arrow.forward")
+                        Text("Programs")
+                        Image(systemName:"arrow.right")
                     }
 
 
@@ -56,35 +57,55 @@ struct ContentView_Previews: PreviewProvider {
 }
 
 struct PersonalRoutinesView: View {
-  @State private var isFormPresented = false
-
-  var body: some View {
-    VStack {
-      if routines.isEmpty {
-        Text("Welcome to Personal Routines!")
-      } else {
-        List {
-          ForEach(Array(routines.keys), id: \.self) { key in
-            Text(key)
-          }
+    @State private var isFormPresented = false
+    
+    var body: some View {
+        VStack {
+            if routines.isEmpty {
+                Text("Welcome to Personal Routines!")
+                Button(action: {
+                    self.isFormPresented = true
+                }) {
+                    Text("Open Form")
+                }
+            } else {
+                List(routines.keys.sorted(), id: \.self) { key in
+                    RoutineRow(routine: routines[key]!)
+                }
+                Spacer()
+                Button(action: {
+                    self.isFormPresented = true
+                }) {
+                    Text("Open Form")
+                }
+            }
+        }.sheet(isPresented: $isFormPresented) {
+            FormView(isFormPresented: self.$isFormPresented)
         }
-      }
-      Spacer()
-      Button(action: {
-        self.isFormPresented = true
-      }) {
-        Text("Open Form")
-      }
-    }.sheet(isPresented: $isFormPresented) {
-      FormView()
     }
-  }
+}
+   
+struct RoutineRow: View {
+    let routine: Routine
+    var body: some View {
+        Button(action: {
+            // open the selected routine details page
+        }) {
+            HStack {
+                Text(routine.name)
+                Spacer()
+                Text("\(routine.movements.count) exercises")
+                    .font(.caption)
+            }
+        }
+    }
 }
 
 
 struct FormView: View {
   @State private var selectedMovements = Set<String>()
   @State private var routineName = "New Routine"
+  @Binding var isFormPresented: Bool
 
   let exercises = [
     "Chest": ["Barbell Bench Press", "Dumbbell Fly", "Push-ups"],
@@ -127,9 +148,11 @@ struct FormView: View {
   func saveRoutine() {
     let newRoutine = Routine(name: routineName, movements: Array(selectedMovements))
     routines[routineName] = newRoutine
+    isFormPresented = false
     //You can add the implementation to save the routine to the dictionary 'routines' here.
   }
 }
+
 
 struct Routine {
   let name: String
